@@ -1,5 +1,7 @@
 package com.sugarshield.ui;
 
+import com.sugarshield.GuiController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,9 +11,10 @@ public class SignupPanel extends JPanel {
     private JTextField emailField;
     private JPasswordField passwordField;
     private JButton signupButton;
+    GuiController guiController = null;
+    public SignupPanel(GuiController guiController) {
 
-    public SignupPanel() {
-
+        this.guiController = guiController;
         setLayout(new GridLayout(4, 2, 10, 10));
 
         add(new JLabel("Full Name:"));

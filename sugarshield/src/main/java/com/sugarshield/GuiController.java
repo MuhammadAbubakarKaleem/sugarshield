@@ -54,13 +54,13 @@ public class GuiController extends JFrame {
 
     private void createPanels() {
 
-        mainPanel.add(new DashboardPanel(), DASHBOARD);
-        mainPanel.add(new SugarReadingPanel(), SUGAR);
-        mainPanel.add(new ExercisePanel(), EXERCISE);
-        mainPanel.add(new ReportPanel(), REPORT);
-        mainPanel.add(new ProfilePanel(), PROFILE);
+        mainPanel.add(new DashboardPanel(this), DASHBOARD);
+        mainPanel.add(new SugarReadingPanel(this), SUGAR);
+        mainPanel.add(new ExercisePanel(this), EXERCISE);
+        mainPanel.add(new ReportPanel(this), REPORT);
+        mainPanel.add(new ProfilePanel(this), PROFILE);
         mainPanel.add(new LoginPanel(this), LOGIN);
-        mainPanel.add(new SignupPanel(), SIGNUP);
+        mainPanel.add(new SignupPanel(this), SIGNUP);
         cardLayout.show(mainPanel, LOGIN);
     }
 
