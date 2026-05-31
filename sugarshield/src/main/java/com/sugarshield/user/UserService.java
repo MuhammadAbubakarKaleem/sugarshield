@@ -66,7 +66,7 @@ public class UserService {
 
     public void getAllUser() {
         for (User u : userDao.getAllUsers()) {
-            System.out.println(u);
+            System.out.println(u.printWithoutSensitiveInfo());
         }
     }
 }

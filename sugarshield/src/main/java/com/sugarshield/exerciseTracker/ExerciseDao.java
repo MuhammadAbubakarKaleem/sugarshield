@@ -4,6 +4,7 @@ import com.sugarshield.db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ExerciseDao {
@@ -25,6 +26,38 @@ public class ExerciseDao {
                 exercise.setDurationMinutes(resultSet.getInt("duration_minutes"));
                 exercise.setDifficultyLevel(resultSet.getString("difficulty_level"));
                 exerciseData.put(exercise.getExerciseId(), exercise);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return exerciseData;
+    }
+
+    public HashMap<String, ArrayList<Exercise>> getAllExerciseByGroupByCategory() {
+
+        Exercise exercise;
+        HashMap<String, ArrayList<Exercise>> exerciseData = new HashMap<>();
+        String sql = "SELECT * FROM Exercise";
+        try (Connection connection = DBConnection.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                exercise = new Exercise();
+                exercise.setExerciseId(resultSet.getInt("exercise_id"));
+                exercise.setExerciseName(resultSet.getString("exercise_name"));
+                exercise.setCaloriesBurned(resultSet.getFloat("calories_burned"));
+                exercise.setRecommendedFor(resultSet.getString("recommended_for"));
+                exercise.setDurationMinutes(resultSet.getInt("duration_minutes"));
+                exercise.setDifficultyLevel(resultSet.getString("difficulty_level"));
+
+                if(exerciseData.get(exercise.getDifficultyLevel())!=null){
+                    ArrayList<Exercise> catExercise = exerciseData.get(exercise.getDifficultyLevel());
+                    catExercise.add(exercise);
+                }else{
+                    ArrayList<Exercise> catExercise = new ArrayList<>();
+                    catExercise.add(exercise);
+                    exerciseData.put(exercise.getDifficultyLevel(), catExercise);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

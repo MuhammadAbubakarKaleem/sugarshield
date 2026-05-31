@@ -66,7 +66,7 @@ public class App {
 
                 case 4:
 
-                    System.out.print("Enter Difficulty Level: ");
+                    System.out.print("Enter Difficulty Level. Options (Beginner, Intermediate, Advance): ");
                     String level = sc.next();
 
                     workoutPlan.generateWorkoutPlan(level);

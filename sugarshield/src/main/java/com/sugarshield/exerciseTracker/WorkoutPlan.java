@@ -7,31 +7,25 @@ import java.util.Random;
 public class WorkoutPlan {
 
     ExerciseDao exerciseDao;
-    ArrayList<Exercise> exerciseList;
+    ArrayList<Exercise> exerciseList = new ArrayList<>();
 
     public WorkoutPlan() {
 
         exerciseDao = new ExerciseDao();
 
-        exerciseList = new ArrayList<>(exerciseDao.getAllExercise().values());
     }
 
     public void generateWorkoutPlan(String category) {
 
+
         Random random = new Random();
 
-        ArrayList<Exercise> filteredList = new ArrayList<>();
+        ArrayList<Exercise> filteredList = exerciseDao.getAllExerciseByGroupByCategory().get(category);
 
-        // Filter by category
-        for (Exercise e : exerciseList) {
-            if (e.getDifficultyLevel().equalsIgnoreCase(category)) {
-                filteredList.add(e);
-            }
-        }
 
         // Safety check
-        if (filteredList.isEmpty()) {
-            System.out.println("No exercises found for category!");
+        if (filteredList == null || filteredList.isEmpty()) {
+            System.out.println("No exercises found for level!");
             return;
         }
 
@@ -67,7 +61,7 @@ public class WorkoutPlan {
 
             for (Exercise e : weeklyPlan.get(day)) {
 
-                System.out.println(" - " + e.getExerciseName()+ " Duration "+ e.getDurationMinutes() +" Calories burn "+ e.getCaloriesBurned());
+                System.out.println(" - " + e.getExerciseName()+ ".  Duration: "+ e.getDurationMinutes() +". Calories burn: "+ e.getCaloriesBurned());
             }
 
             System.out.println();

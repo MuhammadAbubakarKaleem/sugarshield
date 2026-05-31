@@ -112,4 +112,17 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public String printWithoutSensitiveInfo() {
+        return "User{" +
+                "fullName='" + fullName + '\'' +
+                ", age=" + age +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", gender=" + gender +
+                ", diabetesType='" + diabetesType + '\'' +
+                ", id=" + id +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
