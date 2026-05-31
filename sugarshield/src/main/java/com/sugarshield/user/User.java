@@ -82,7 +82,7 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail(String email) {
+    public String getEmail() {
         return email;
     }
 

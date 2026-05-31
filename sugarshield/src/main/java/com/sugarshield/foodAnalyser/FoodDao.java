@@ -13,7 +13,7 @@ public class FoodDao {
 
         Food food ;
         HashMap<Integer, Food > foodData = new HashMap<>();
-        String sql = "Select * from Food";
+        String sql = "Select * from Food ";
         try (Connection connection = DBConnection.getConnection()){
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet  resultSet = statement.executeQuery();

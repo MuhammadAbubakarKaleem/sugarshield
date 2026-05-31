@@ -3,6 +3,7 @@ package com.sugarshield.HealthReportGenerater;
 import com.sugarshield.bmiCalculator.BMICalculator;
 
 import com.sugarshield.db.DBConnection;
+
 import java.sql.*;
 
 
@@ -12,165 +13,71 @@ public class HealthReportDAO {
 
         HealthReport report = new HealthReport();
 
-        try (
-                Connection conn = DBConnection.getConnection()
-        ) {
+        try (Connection conn = DBConnection.getConnection()) {
 
+            // Average Sugar Level
+            String sugarQuery = "SELECT AVG(sugar_level) AS avgSugar " +
+                    "FROM Sugar_Readings " +
+                    "WHERE user_id=?";
 
-            String sugarQuery =
-                    "SELECT AVG(sugar_level) as avgSugar " +
-                            "FROM Sugar_Readings " +
-                            "WHERE user_id=?";
+            PreparedStatement sugarStatement = conn.prepareStatement(sugarQuery);
 
-            PreparedStatement sugarStmt =
-                    conn.prepareStatement(sugarQuery);
+            sugarStatement.setInt(1, userId);
 
-            sugarStmt.setInt(1,userId);
-
-            ResultSet sugarRs =
-                    sugarStmt.executeQuery();
+            ResultSet sugarResultSet =
+                    sugarStatement.executeQuery();
 
             float avgSugar = 0;
 
-            if(sugarRs.next()){
-                avgSugar = sugarRs.getFloat("avgSugar");
+            if (sugarResultSet.next()) {
+                avgSugar = sugarResultSet.getFloat("avgSugar");
             }
 
+            // BMI Calculation
 
+            String userQuery = "SELECT height, weight FROM Users WHERE user_id=?";
 
-            String userQuery =
-                    "SELECT height,weight FROM Users WHERE user_id=?";
+            PreparedStatement userStatement = conn.prepareStatement(userQuery);
 
-            PreparedStatement userStmt =
-                    conn.prepareStatement(userQuery);
+            userStatement.setInt(1, userId);
 
-            userStmt.setInt(1,userId);
-
-            ResultSet userRs =
-                    userStmt.executeQuery();
+            ResultSet userResultSet = userStatement.executeQuery();
 
             float bmi = 0;
 
-            if(userRs.next()){
+            if (userResultSet.next()) {
+                float height = userResultSet.getFloat("height");
 
-                float height =
-                        userRs.getFloat("height");
+                float weight = userResultSet.getFloat("weight");
 
-                float weight =
-                        userRs.getFloat("weight");
-
-                bmi =
-                        BMICalculator.calculateBMI(weight,height);
+                bmi = BMICalculator.calculateBMI(weight, height);
             }
 
-            //----------------------------------
-            // Water Intake
-            //----------------------------------
+            // Total Calories Burned
+            String exerciseQuery = "SELECT SUM(calories_burned) AS totalCalories " +
+                                    "FROM Activity_Logs WHERE user_id=?";
 
-            String waterQuery =
-                    "SELECT AVG(intake_amount) avgWater " +
-                            "FROM Water_Intake WHERE user_id=?";
+            PreparedStatement exerciseStatement = conn.prepareStatement(exerciseQuery);
 
-            PreparedStatement waterStmt =
-                    conn.prepareStatement(waterQuery);
+            exerciseStatement.setInt(1, userId);
 
-            waterStmt.setInt(1,userId);
-
-            ResultSet waterRs =
-                    waterStmt.executeQuery();
-
-            float avgWater = 0;
-
-            if(waterRs.next()){
-                avgWater =
-                        waterRs.getFloat("avgWater");
-            }
-
-            //----------------------------------
-            // Sleep
-            //----------------------------------
-
-            String sleepQuery =
-                    "SELECT AVG(sleep_hours) avgSleep " +
-                            "FROM Sleep_Logs WHERE user_id=?";
-
-            PreparedStatement sleepStmt =
-                    conn.prepareStatement(sleepQuery);
-
-            sleepStmt.setInt(1,userId);
-
-            ResultSet sleepRs =
-                    sleepStmt.executeQuery();
-
-            float avgSleep = 0;
-
-            if(sleepRs.next()){
-                avgSleep =
-                        sleepRs.getFloat("avgSleep");
-            }
-
-            //----------------------------------
-            // Stress
-            //----------------------------------
-
-            String stressQuery =
-                    "SELECT AVG(stress_level) avgStress " +
-                            "FROM Stress_Logs WHERE user_id=?";
-
-            PreparedStatement stressStmt =
-                    conn.prepareStatement(stressQuery);
-
-            stressStmt.setInt(1,userId);
-
-            ResultSet stressRs =
-                    stressStmt.executeQuery();
-
-            int avgStress = 0;
-
-            if(stressRs.next()){
-                avgStress =
-                        stressRs.getInt("avgStress");
-            }
-
-            //----------------------------------
-            // Calories Burned
-            //----------------------------------
-
-            String exerciseQuery =
-                    "SELECT SUM(calories_burned) totalCalories " +
-                            "FROM Activity_Logs WHERE user_id=?";
-
-            PreparedStatement exerciseStmt =
-                    conn.prepareStatement(exerciseQuery);
-
-            exerciseStmt.setInt(1,userId);
-
-            ResultSet exerciseRs =
-                    exerciseStmt.executeQuery();
+            ResultSet exerciseResultSet = exerciseStatement.executeQuery();
 
             float calories = 0;
 
-            if(exerciseRs.next()){
-                calories =
-                        exerciseRs.getFloat("totalCalories");
+            if (exerciseResultSet.next()) {
+                calories = exerciseResultSet.getFloat("totalCalories");
             }
 
-            //----------------------------------
             // Report Generation
-            //----------------------------------
+            String status = ReportGenerator.determineHealthStatus(avgSugar, bmi);
 
-            String status =
-                    ReportGenerator
-                            .determineHealthStatus(avgSugar,bmi);
-
-            String summary = ReportGenerator.generateSummary(
-                                    avgSugar,
-                                    bmi,
-                                    avgWater,
-                                    avgSleep,
-                                    avgStress,
-                                    calories
-                            );
+            String summary =
+                    ReportGenerator.generateSummary(
+                            avgSugar,
+                            bmi,
+                            calories
+                    );
 
             report.setUserId(userId);
             report.setAverageSugar(avgSugar);
@@ -178,8 +85,7 @@ public class HealthReportDAO {
             report.setHealthStatus(status);
             report.setReportSummary(summary);
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

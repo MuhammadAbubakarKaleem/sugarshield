@@ -69,7 +69,6 @@ public class Food {
         this.safeStatus = safeStatus;
     }
 
-    @Override
     public String toString() {
         return "Food{" +
                 "foodId=" + foodId +

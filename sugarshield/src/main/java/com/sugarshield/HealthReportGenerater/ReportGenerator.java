@@ -1,16 +1,15 @@
 package com.sugarshield.HealthReportGenerater;
 
 
-
 public class ReportGenerator {
 
     public static String determineHealthStatus(float avgSugar, float bmi) {
 
-        if(avgSugar <= 140 && bmi >= 18.5 && bmi <= 24.9) {
+        if (avgSugar <= 140 && bmi >= 18.5 && bmi <= 24.9) {
             return "Healthy";
         }
 
-        if(avgSugar <= 180) {
+        if (avgSugar <= 180) {
             return "Moderate Risk";
         }
 
@@ -18,9 +17,10 @@ public class ReportGenerator {
     }
 
     public static String generateSummary(
-            float sugar, float v, float avgWater, float avgSugar,
+            float avgSugar,
             float bmi,
-            float caloriesBurned) {
+            float caloriesBurned
+    ) {
 
         StringBuilder summary = new StringBuilder();
 

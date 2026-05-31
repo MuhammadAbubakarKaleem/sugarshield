@@ -24,7 +24,6 @@ public class WorkoutPlan {
 
         // Filter by category
         for (Exercise e : exerciseList) {
-
             if (e.getDifficultyLevel().equalsIgnoreCase(category)) {
                 filteredList.add(e);
             }
@@ -46,7 +45,6 @@ public class WorkoutPlan {
         };
 
         HashMap<String, ArrayList<Exercise>> weeklyPlan = new HashMap<>();
-
         for (String day : days) {
 
             ArrayList<Exercise> dailyWorkout = new ArrayList<>();
@@ -69,12 +67,12 @@ public class WorkoutPlan {
 
             for (Exercise e : weeklyPlan.get(day)) {
 
-                System.out.println(" - " + e.getExerciseName());
+                System.out.println(" - " + e.getExerciseName()+ " Duration "+ e.getDurationMinutes() +" Calories burn "+ e.getCaloriesBurned());
             }
 
             System.out.println();
         }
 
-        System.out.println("Sunday: REST DAY 😴");
+        System.out.println("Sunday: REST DAY ");
     }
 }
