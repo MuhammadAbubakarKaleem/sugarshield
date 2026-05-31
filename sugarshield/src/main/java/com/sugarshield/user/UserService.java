@@ -16,6 +16,14 @@ public class UserService {
 
         User user = getUserInput(); // input only
 
+        // validation
+        if (user == null || user.getFullName() == null ||
+                user.getEmail() == null ||
+                user.getPassword() == null) {
+            System.out.println("Invalid input. Signup failed.");
+            return null;
+        }
+
         User savedUser = userDao.insertUser(user);
 
         if (savedUser != null) {
