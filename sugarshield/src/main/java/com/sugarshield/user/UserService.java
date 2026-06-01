@@ -1,34 +1,37 @@
 package com.sugarshield.user;
 
-import java.util.Scanner;
-
 public class UserService {
 
     private final UserDao userDao;
-    private User currentUser;   // 🔥 SESSION USER
+    private User currentUser;   // session user
 
     public UserService() {
         userDao = new UserDao();
     }
 
 
-    public User signUp() {
-
-        User user = getUserInput(); // input only
-
-        // validation
-        if (user == null || user.getFullName() == null ||
-                user.getEmail() == null ||
-                user.getPassword() == null) {
+    public User signUp(User user) {
+        if (user == null ||
+                user.getFullName() == null || user.getFullName().trim().isEmpty() ||
+                user.getEmail() == null || user.getEmail().trim().isEmpty() ||
+                user.getPassword() == null || user.getPassword().trim().isEmpty()) {
             System.out.println("Invalid input. Signup failed.");
             return null;
         }
 
-        User savedUser = userDao.insertUser(user);
+        user.setFullName(user.getFullName().trim());
+        user.setEmail(user.getEmail().trim());
 
+        User existingUser = userDao.getUserByEmail(user.getEmail());
+        if (existingUser != null) {
+            System.out.println("User already signed up with this email.");
+            return null;
+        }
+
+        User savedUser = userDao.insertUser(user);
         if (savedUser != null) {
-            this.currentUser = savedUser; // 🔥 AUTO LOGIN AFTER SIGNUP
-            System.out.println("Signup successful ✔");
+            this.currentUser = savedUser;
+            System.out.println("Signup successful");
         }
 
         return savedUser;
@@ -40,35 +43,18 @@ public class UserService {
         User user = userDao.getUserByEmail(email);
 
         if (user != null && user.getPassword().equals(password)) {
-            this.currentUser = user; // 🔥 STORE SESSION USER
-            System.out.println("Login successful ✔");
+            this.currentUser = user; // store session user
+            System.out.println("Login successful");
             return user;
         }
 
-        System.out.println("Invalid credentials ❌");
+        System.out.println("Invalid credentials");
         return null;
     }
 
 
     public User getCurrentUser() {
         return currentUser;
-    }
-
-
-    private User getUserInput() {
-        User user = new User();
-        Scanner obj = new Scanner(System.in);
-
-        System.out.println("Enter name:");
-        user.setFullName(obj.next());
-
-        System.out.println("Enter email:");
-        user.setEmail(obj.next());
-
-        System.out.println("Enter password:");
-        user.setPassword(obj.next());
-
-        return user;
     }
 
 

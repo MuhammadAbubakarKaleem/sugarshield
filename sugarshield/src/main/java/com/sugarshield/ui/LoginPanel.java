@@ -20,21 +20,59 @@ public class LoginPanel extends JPanel {
 
         this.guiController = guiController;
 
-        setLayout(new GridLayout(3, 2, 10, 10));
+        setLayout(new GridBagLayout());
 
-        add(new JLabel("Email:"));
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Login");
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 24f));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        formPanel.add(titleLabel, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
         emailField = new JTextField();
-        add(emailField);
+        emailField.setColumns(20);
+        formPanel.add(emailField, gbc);
 
-        add(new JLabel("Password:"));
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1;
         passwordField = new JPasswordField();
-        add(passwordField);
+        passwordField.setColumns(20);
+        formPanel.add(passwordField, gbc);
 
-        add(new JLabel());
-
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(120, 32));
         loginButton.addActionListener(e-> doLogin());
-        add(loginButton);
+        formPanel.add(loginButton, gbc);
+
+        JButton signupLink = new JButton("Don't have an account? Sign up");
+        signupLink.setBorderPainted(false);
+        signupLink.setContentAreaFilled(false);
+        signupLink.setFocusPainted(false);
+        signupLink.addActionListener(e -> guiController.switchPanel(GuiController.SIGNUP));
+        gbc.gridy = 4;
+        gbc.insets = new Insets(4, 8, 8, 8);
+        formPanel.add(signupLink, gbc);
+
+        add(formPanel);
     }
 
     public void doLogin(){
@@ -43,6 +81,7 @@ public class LoginPanel extends JPanel {
             JOptionPane.showMessageDialog(this,"Invalid Credentials");
             return;
         }
+        this.guiController.setCurrentUser(currentUser);
         this.guiController.showHideMenuBar(true);
         this.guiController.switchPanel(GuiController.DASHBOARD);
     }

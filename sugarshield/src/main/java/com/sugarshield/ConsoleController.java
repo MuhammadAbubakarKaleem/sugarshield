@@ -39,7 +39,7 @@ public class ConsoleController {
 
                 case 1:
 
-                    currentUser = userService.signUp();
+                    currentUser = userService.signUp(getSignupInput(sc));
 
                     if (currentUser != null) {
                         System.out.println("Signup Successful");
@@ -95,5 +95,22 @@ public class ConsoleController {
         } while (choice != 0);
 
         sc.close();
+    }
+
+    private User getSignupInput(Scanner sc) {
+        User user = new User();
+
+        sc.nextLine();
+
+        System.out.println("Enter name:");
+        user.setFullName(sc.nextLine());
+
+        System.out.println("Enter email:");
+        user.setEmail(sc.next());
+
+        System.out.println("Enter password:");
+        user.setPassword(sc.next());
+
+        return user;
     }
 }

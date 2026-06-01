@@ -48,6 +48,10 @@ public class GuiController extends JFrame {
         cardLayout.show(mainPanel, panelName);
     }
 
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
     public void showHideMenuBar(boolean visible){
         this.menuBar.setVisible(visible);
     }
