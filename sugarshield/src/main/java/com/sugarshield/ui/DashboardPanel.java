@@ -11,5 +11,7 @@ public class DashboardPanel extends JPanel {
 
         this.guiController = guiController;
         add(new JLabel("Dashboard"));
+
+
     }
 }

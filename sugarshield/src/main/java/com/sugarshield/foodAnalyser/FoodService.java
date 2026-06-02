@@ -10,7 +10,6 @@ public class FoodService {
     public Food searchByName(String name){
         for (Food f : foodDao.getAllFoodAsHashMap().values()){
             if (name.equalsIgnoreCase(f.getFoodName())){
-                System.out.println(f);
                 return f;
             }
 

@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class GuiController extends JFrame {
 
+    // making constant of names of panel .
     public static final String DASHBOARD = "DASHBOARD";
     public static final String SUGAR = "SUGAR";
     public static final String EXERCISE = "EXERCISE";
@@ -39,7 +40,6 @@ public class GuiController extends JFrame {
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-
         add(mainPanel);
     }
 
