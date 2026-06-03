@@ -12,6 +12,7 @@ public class GuiController extends JFrame {
     public static final String DASHBOARD = "DASHBOARD";
     public static final String SUGAR = "SUGAR";
     public static final String EXERCISE = "EXERCISE";
+    public static final String FOOD = "FOOD";
     public static final String REPORT = "REPORT";
     public static final String PROFILE = "PROFILE";
     public static final String LOGIN = "LOGIN";
@@ -61,6 +62,7 @@ public class GuiController extends JFrame {
         mainPanel.add(new DashboardPanel(this), DASHBOARD);
         mainPanel.add(new SugarReadingPanel(this), SUGAR);
         mainPanel.add(new ExercisePanel(this), EXERCISE);
+        mainPanel.add(new FoodAnalyserPanel(this), FOOD);
         mainPanel.add(new ReportPanel(this), REPORT);
         mainPanel.add(new ProfilePanel(this), PROFILE);
         mainPanel.add(new LoginPanel(this), LOGIN);
@@ -76,19 +78,22 @@ public class GuiController extends JFrame {
 
         JMenuItem dashboardItem = new JMenuItem("Dashboard");
         JMenuItem sugarItem = new JMenuItem("Sugar Readings");
-        JMenuItem exerciseItem = new JMenuItem("Exercise Tracker");
+        JMenuItem exerciseItem = new JMenuItem("Exercise Plan");
+        JMenuItem foodItem = new JMenuItem("Food Analyser");
         JMenuItem reportItem = new JMenuItem("Reports");
         JMenuItem profileItem = new JMenuItem("Profile");
 
         dashboardItem.addActionListener(e-> switchPanel(DASHBOARD));
         sugarItem.addActionListener(e-> switchPanel(SUGAR));
         exerciseItem.addActionListener(e-> switchPanel(EXERCISE));
+        foodItem.addActionListener(e-> switchPanel(FOOD));
         reportItem.addActionListener(e-> switchPanel(REPORT));
         profileItem.addActionListener(e-> switchPanel(PROFILE));
 
         navigationMenu.add(dashboardItem);
         navigationMenu.add(sugarItem);
         navigationMenu.add(exerciseItem);
+        navigationMenu.add(foodItem);
         navigationMenu.add(reportItem);
         navigationMenu.add(profileItem);
 

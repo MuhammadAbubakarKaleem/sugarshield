@@ -30,7 +30,7 @@ public class ExercisePanel extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
 
-        JLabel titleLabel = new JLabel("Exercise Tracker");
+        JLabel titleLabel = new JLabel("Exercise Plan");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 24f));
         topPanel.add(titleLabel, BorderLayout.NORTH);
 
