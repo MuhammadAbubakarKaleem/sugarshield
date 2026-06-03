@@ -72,6 +72,8 @@ public class LoginPanel extends JPanel {
         gbc.insets = new Insets(4, 8, 8, 8);
         formPanel.add(signupLink, gbc);
 
+        emailField.setText("abubakarkaleem22@gmail.com");
+        passwordField.setText("123456");
         add(formPanel);
     }
 
