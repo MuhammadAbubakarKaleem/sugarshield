@@ -8,8 +8,12 @@ public class FoodService {
     }
 
     public Food searchByName(String name){
+        if (name == null || name.trim().isEmpty()) {
+            return null;
+        }
+
         for (Food f : foodDao.getAllFoodAsHashMap().values()){
-            if (name.equalsIgnoreCase(f.getFoodName())){
+            if (name.trim().equalsIgnoreCase(f.getFoodName())){
                 return f;
             }
 
