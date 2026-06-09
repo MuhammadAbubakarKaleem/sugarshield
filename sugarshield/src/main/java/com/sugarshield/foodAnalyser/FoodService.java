@@ -1,5 +1,7 @@
 package com.sugarshield.foodAnalyser;
 
+import java.util.ArrayList;
+
 public class FoodService {
     private final FoodDao foodDao;
 
@@ -19,5 +21,9 @@ public class FoodService {
 
         }
         return null;
+    }
+
+    public ArrayList<Food> getAllFoods() {
+        return foodDao.getAllFoods();
     }
 }

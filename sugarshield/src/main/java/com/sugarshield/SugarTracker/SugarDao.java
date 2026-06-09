@@ -3,6 +3,7 @@ package com.sugarshield.SugarTracker;
 import com.sugarshield.db.DBConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SugarDao {
 
@@ -61,7 +62,41 @@ public class SugarDao {
         return null;
     }
 
+    public ArrayList<Sugar> getSugarReadingsByUserId(int userId) {
+
+        ArrayList<Sugar> readings = new ArrayList<>();
+        String sql = "SELECT * FROM Sugar_Readings WHERE user_id = ? ORDER BY reading_time DESC";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Sugar sugar = new Sugar();
+                sugar.setReadingId(resultSet.getInt("reading_id"));
+                sugar.setUserId(resultSet.getInt("user_id"));
+                sugar.setSugarLevel(resultSet.getFloat("sugar_level"));
+                sugar.setReadingType(resultSet.getString("reading_type"));
+
+                Timestamp timestamp = resultSet.getTimestamp("reading_time");
+                if (timestamp != null) {
+                    sugar.setReadingTime(timestamp.toLocalDateTime());
+                }
+
+                sugar.setNotes(resultSet.getString("notes"));
+                readings.add(sugar);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return readings;
+    }
+
 
 }
-
 

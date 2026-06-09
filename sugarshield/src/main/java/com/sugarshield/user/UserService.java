@@ -57,6 +57,43 @@ public class UserService {
         return currentUser;
     }
 
+    public User getUserById(int userId) {
+        return userDao.getUserById(userId);
+    }
+
+    public User updateUser(User user) {
+        if (user == null ||
+                user.getId() <= 0 ||
+                user.getFullName() == null || user.getFullName().trim().isEmpty() ||
+                user.getEmail() == null || user.getEmail().trim().isEmpty() ||
+                user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            System.out.println("Invalid input. Profile update failed.");
+            return null;
+        }
+
+        if (user.getAge() < 0 || user.getHeight() < 0 || user.getWeight() < 0) {
+            System.out.println("Invalid health details. Profile update failed.");
+            return null;
+        }
+
+        user.setFullName(user.getFullName().trim());
+        user.setEmail(user.getEmail().trim());
+
+        User existingUser = userDao.getUserByEmail(user.getEmail());
+        if (existingUser != null && existingUser.getId() != user.getId()) {
+            System.out.println("Email already belongs to another user.");
+            return null;
+        }
+
+        boolean updated = userDao.updateUser(user);
+        if (updated) {
+            this.currentUser = user;
+            return user;
+        }
+
+        return null;
+    }
+
 
     public void getAllUser() {
         for (User u : userDao.getAllUsers()) {

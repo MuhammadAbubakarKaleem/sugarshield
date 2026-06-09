@@ -26,10 +26,11 @@ public class BMIDAO {
 
             if (rs.next()) {
 
-                float height = rs.getFloat("height");
+                String heightText = rs.getString("height");
+                float height = Float.parseFloat(heightText);
                 float weight = rs.getFloat("weight");
 
-                float bmiValue = BMICalculator.calculateBMI(weight, height);
+                float bmiValue = BMICalculator.calculateBMIFromFeetInches(weight, heightText);
                 String status = BMICalculator.getBMIStatus(bmiValue);
 
                 bmiRecord = new BMI();

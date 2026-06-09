@@ -4,6 +4,7 @@ import com.sugarshield.db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -34,6 +35,35 @@ public class FoodDao {
             throw new RuntimeException(e);
         }
         return foodData;
+    }
+
+    public ArrayList<Food> getAllFoods(){
+
+        Food food;
+        ArrayList<Food> foodList = new ArrayList<>();
+        String sql = "Select * from Food ORDER BY food_name";
+
+        try (Connection connection = DBConnection.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                food = new Food();
+                food.setFoodId(resultSet.getInt("food_id"));
+                food.setFoodName(resultSet.getString("food_name"));
+                food.setCalories(resultSet.getFloat("calories"));
+                food.setSugarContent(resultSet.getFloat("sugar_content"));
+                food.setGlycemicIndex(resultSet.getInt("glycemic_index"));
+                food.setCarbohydrates(resultSet.getFloat("carbohydrates"));
+                food.setSafeStatus(resultSet.getString("safe_status"));
+                foodList.add(food);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return foodList;
     }
 
     public Food getFoodByName(String foodName){

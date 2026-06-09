@@ -8,12 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class FoodAnalyserPanel extends JPanel {
 
     private GuiController guiController;
     private FoodService foodService;
     private JTextField foodNameField;
+    private JComboBox<String> foodComboBox;
     private JButton searchButton;
     private JPanel resultPanel;
 
@@ -32,11 +34,14 @@ public class FoodAnalyserPanel extends JPanel {
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         foodNameField = new JTextField(25);
+        foodComboBox = new JComboBox<>();
         searchButton = new JButton("Search");
 
         searchPanel.add(new JLabel("Food Name:"));
         searchPanel.add(foodNameField);
         searchPanel.add(searchButton);
+        searchPanel.add(new JLabel("Select Food:"));
+        searchPanel.add(foodComboBox);
         topPanel.add(searchPanel, BorderLayout.SOUTH);
 
         add(topPanel, BorderLayout.NORTH);
@@ -45,13 +50,30 @@ public class FoodAnalyserPanel extends JPanel {
         resultPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         add(resultPanel, BorderLayout.CENTER);
 
-        showMessage("Search a food item to see its details.");
+        loadFoodNames();
+        showMessage("Search or select a food item to see its details.");
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 searchFood();
             }
         });
+
+        foodComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                selectFoodFromDropDown();
+            }
+        });
+    }
+
+    private void loadFoodNames() {
+        foodComboBox.addItem("Select Food");
+
+        ArrayList<Food> foodList = foodService.getAllFoods();
+
+        for (Food food : foodList) {
+            foodComboBox.addItem(food.getFoodName());
+        }
     }
 
     private void searchFood() {
@@ -63,6 +85,25 @@ public class FoodAnalyserPanel extends JPanel {
         }
 
         Food food = foodService.searchByName(foodName);
+
+        if (food == null) {
+            showMessage("No food found with this name.");
+            return;
+        }
+
+        showFoodDetails(food);
+    }
+
+    private void selectFoodFromDropDown() {
+        String selectedFood = (String) foodComboBox.getSelectedItem();
+
+        if (selectedFood == null || selectedFood.equals("Select Food")) {
+            return;
+        }
+
+        foodNameField.setText(selectedFood);
+
+        Food food = foodService.searchByName(selectedFood);
 
         if (food == null) {
             showMessage("No food found with this name.");

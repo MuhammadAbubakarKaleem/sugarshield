@@ -5,6 +5,7 @@ import com.sugarshield.bmiCalculator.BMICalculator;
 import com.sugarshield.db.DBConnection;
 
 import java.sql.*;
+import java.util.HashMap;
 
 
 public class HealthReportDAO {
@@ -35,7 +36,7 @@ public class HealthReportDAO {
 
             // BMI Calculation
 
-            String userQuery = "SELECT height, weight FROM Users WHERE user_id=?";
+            String userQuery = "SELECT full_name, age, diabetes_type, height, weight FROM Users WHERE user_id=?";
 
             PreparedStatement userStatement = conn.prepareStatement(userQuery);
 
@@ -46,11 +47,36 @@ public class HealthReportDAO {
             float bmi = 0;
 
             if (userResultSet.next()) {
-                float height = userResultSet.getFloat("height");
+                String height = userResultSet.getString("height");
 
                 float weight = userResultSet.getFloat("weight");
 
-                bmi = BMICalculator.calculateBMI(weight, height);
+                report.setFullName(userResultSet.getString("full_name"));
+                report.setAge(userResultSet.getInt("age"));
+                report.setDiabetesType(userResultSet.getString("diabetes_type"));
+                report.setHeight(userResultSet.getFloat("height"));
+                report.setWeight(weight);
+                bmi = BMICalculator.calculateBMIFromFeetInches(weight, height);
+            }
+
+            String sugarTypeQuery = "SELECT reading_type, AVG(sugar_level) AS avgSugar " +
+                    "FROM Sugar_Readings " +
+                    "WHERE user_id=? " +
+                    "GROUP BY reading_type";
+
+            PreparedStatement sugarTypeStatement = conn.prepareStatement(sugarTypeQuery);
+
+            sugarTypeStatement.setInt(1, userId);
+
+            ResultSet sugarTypeResultSet = sugarTypeStatement.executeQuery();
+
+            HashMap<String, Float> averageSugarByType = new HashMap<>();
+
+            while (sugarTypeResultSet.next()) {
+                averageSugarByType.put(
+                        sugarTypeResultSet.getString("reading_type"),
+                        sugarTypeResultSet.getFloat("avgSugar")
+                );
             }
 
             // Total Calories Burned
@@ -82,6 +108,7 @@ public class HealthReportDAO {
             report.setUserId(userId);
             report.setAverageSugar(avgSugar);
             report.setBmi(bmi);
+            report.setAverageSugarByType(averageSugarByType);
             report.setHealthStatus(status);
             report.setReportSummary(summary);
 

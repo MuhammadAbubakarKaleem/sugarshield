@@ -13,6 +13,7 @@ public class GuiController extends JFrame {
     public static final String SUGAR = "SUGAR";
     public static final String EXERCISE = "EXERCISE";
     public static final String FOOD = "FOOD";
+    public static final String BMI = "BMI";
     public static final String REPORT = "REPORT";
     public static final String PROFILE = "PROFILE";
     public static final String LOGIN = "LOGIN";
@@ -53,8 +54,18 @@ public class GuiController extends JFrame {
         this.currentUser = currentUser;
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void showHideMenuBar(boolean visible){
         this.menuBar.setVisible(visible);
+    }
+
+    public void logout() {
+        currentUser = null;
+        showHideMenuBar(false);
+        switchPanel(LOGIN);
     }
 
     private void createPanels() {
@@ -63,6 +74,7 @@ public class GuiController extends JFrame {
         mainPanel.add(new SugarReadingPanel(this), SUGAR);
         mainPanel.add(new ExercisePanel(this), EXERCISE);
         mainPanel.add(new FoodAnalyserPanel(this), FOOD);
+        mainPanel.add(new BmiPannel(this), BMI);
         mainPanel.add(new ReportPanel(this), REPORT);
         mainPanel.add(new ProfilePanel(this), PROFILE);
         mainPanel.add(new LoginPanel(this), LOGIN);
@@ -80,22 +92,29 @@ public class GuiController extends JFrame {
         JMenuItem sugarItem = new JMenuItem("Sugar Readings");
         JMenuItem exerciseItem = new JMenuItem("Exercise Plan");
         JMenuItem foodItem = new JMenuItem("Food Analyser");
+        JMenuItem bmiItem = new JMenuItem("BMI Calculator");
         JMenuItem reportItem = new JMenuItem("Reports");
         JMenuItem profileItem = new JMenuItem("Profile");
+        JMenuItem logoutItem = new JMenuItem("Logout");
 
         dashboardItem.addActionListener(e-> switchPanel(DASHBOARD));
         sugarItem.addActionListener(e-> switchPanel(SUGAR));
         exerciseItem.addActionListener(e-> switchPanel(EXERCISE));
         foodItem.addActionListener(e-> switchPanel(FOOD));
+        bmiItem.addActionListener(e-> switchPanel(BMI));
         reportItem.addActionListener(e-> switchPanel(REPORT));
         profileItem.addActionListener(e-> switchPanel(PROFILE));
+        logoutItem.addActionListener(e-> logout());
 
         navigationMenu.add(dashboardItem);
         navigationMenu.add(sugarItem);
         navigationMenu.add(exerciseItem);
         navigationMenu.add(foodItem);
+        navigationMenu.add(bmiItem);
         navigationMenu.add(reportItem);
         navigationMenu.add(profileItem);
+        navigationMenu.addSeparator();
+        navigationMenu.add(logoutItem);
 
         menuBar.add(navigationMenu);
         setJMenuBar(menuBar);
