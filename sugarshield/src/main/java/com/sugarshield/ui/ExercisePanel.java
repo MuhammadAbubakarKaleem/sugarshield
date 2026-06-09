@@ -30,9 +30,15 @@ public class ExercisePanel extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
 
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        JButton backButton = new JButton("<");
+        backButton.addActionListener(e -> guiController.switchPanel(GuiController.DASHBOARD));
+
         JLabel titleLabel = new JLabel("Exercise Plan");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 24f));
-        topPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(backButton);
+        headerPanel.add(titleLabel);
+        topPanel.add(headerPanel, BorderLayout.NORTH);
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         categoryBox = new JComboBox<>(new String[]{

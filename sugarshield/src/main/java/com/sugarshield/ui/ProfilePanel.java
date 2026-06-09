@@ -31,9 +31,16 @@ public class ProfilePanel extends JPanel {
         setLayout(new BorderLayout(15, 15));
         setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        JButton backButton = new JButton("<");
+        backButton.addActionListener(e -> guiController.switchPanel(GuiController.DASHBOARD));
+
         JLabel titleLabel = new JLabel("Profile");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 24f));
-        add(titleLabel, BorderLayout.NORTH);
+        topPanel.add(backButton);
+        topPanel.add(titleLabel);
+
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
